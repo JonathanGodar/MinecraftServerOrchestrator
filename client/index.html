@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=1, initial-scale=1.0">
+    <title>Thing thing</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        .server {
+            color: black;
+
+        }
+
+        .server-online {}
+
+        .server-offline {
+            color: grey;
+        }
+
+        .server-starting {
+            color: yellow;
+        }
+
+        .server-stopping {
+            color: salmon;
+        }
+
+
+        .server-running {
+            color: lightgreen;
+        }
+
+        .button {
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+
+        .start-btn {
+            background-color: springgreen;
+        }
+
+        .stop-btn {
+            background-color: tomato;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app">
+        <ul v-bind:key="server.id" v-for="server in servers">
+            <div v-bind:class="['server', 'server-' + server.status]">
+                <h2>{{server.name}}</h2>
+                <p>Status: {{ server.status }}</p>
+
+                <button v-on:click="start(server.id)" class="button start-btn" v-if="server.status === 'online'">Starta</button>
+                <button v-on:click="stop(server.id)" class="button stop-btn" v-if="server.isActive && !server.isStopping">Stoppa</button>
+                <!-- <button class=".stop-btn" v-if="server. || server-status === 'starting'">Stoppa</button> -->
+            </div>
+        </ul>
+
+        {{ message }}
+    </div>
+
+    <script>
+        function addServerStatus(server) {
+            server.status = 'online';
+
+            if (!server.isAvailable) {
+                server.status = 'offline'
+            }
+
+            if (server.isActive) {
+                server.status = 'running'
+            }
+
+            if (server.isBooting) {
+                server.status = 'starting'
+            }
+
+            if (server.isStopping) {
+                server.status = 'stopping'
+            }
+
+            return server;
+        };
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                servers: [],
+                message: 'Hello Vue!',
+                baseUrl: new URL('http://127.0.0.1:3019'),
+                socketIoUrl: new URL('http://127.0.0.1:3000'),
+                socket: null,
+            },
+            created: async function () {
+                console.log('mounted!');
+                fetch(new URL('server', this.baseUrl)).then(
+                    (response) => {
+                        return response.json()
+                    }
+                ).then((data) => {
+                    for (let i = 0; i < data.length; i++) {
+                        data[i] = addServerStatus(data[i]);
+                    }
+                    this.servers = data;
+                    console.log(this.servers[0]);
+                })
+                this.socket = io(this.socketIoUrl)
+
+                this.socket.on('serverUpdate', (msg) => {
+                    console.log(msg);
+                    this.servers = [...this.servers.filter(val => val.id !== msg.serverId), addServerStatus(msg.data)];
+                })
+
+                // this.servers = await JSON.parse(response.body);
+            },
+            methods: {
+                start: function (id) {
+                    fetch(new URL(`server/switchActive/${id}`, this.baseUrl), {method: 'POST'});
+                    console.log(id);
+                },
+                stop: function (id) {
+                    fetch(new URL(`server/stop`, this.baseUrl), {method: 'POST'});
+                    console.log(id);
+                }
+            }
+
+        })
+    </script>
+</body>
+
+</html>
