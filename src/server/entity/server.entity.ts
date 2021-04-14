@@ -17,9 +17,6 @@ export class ServerEntity extends BaseEntity {
   @Column({ default: false })
   isStopping: boolean;
 
-  // @Column()
-  // internalIp: string;
-
   @Column()
   baseUri: string;
 

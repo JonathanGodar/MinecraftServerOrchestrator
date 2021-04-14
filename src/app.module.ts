@@ -21,7 +21,9 @@ import { ServerModule } from './server/server.module';
     HttpModule.register({}),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
-      // serveStaticOptions: {}
+      serveStaticOptions: {
+        fallthrough: false,
+      },
     }),
   ],
   controllers: [AppController],

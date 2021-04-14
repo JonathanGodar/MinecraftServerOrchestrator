@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 import { Server } from 'socket.io';
 import { ServerService } from './server/server.service';
 
-@WebSocketGateway(3018)
+@WebSocketGateway()
 export class AppGateway implements OnModuleInit, OnModuleDestroy {
   @WebSocketServer() wss: Server;
 
@@ -23,6 +23,7 @@ export class AppGateway implements OnModuleInit, OnModuleDestroy {
   onModuleInit() {
     this.subscription = this.serverService.serverUpdate.subscribe((val) => {
       this.wss.emit('serverUpdate', val);
+      console.log('sending update!!');
     });
     // this.serverService.serverStatus
     // this.wss.emit('wow',)

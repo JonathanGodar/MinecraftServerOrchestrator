@@ -75,12 +75,14 @@ export class ServerService implements OnModuleInit {
     });
   }
 
-  create(createServerDto: CreateServerDto) {
-    try {
-      return ServerEntity.create({
-        ...createServerDto,
-      }).save();
-    } catch (e: unknown) {}
+  async create(createServerDto: CreateServerDto) {
+    return ServerEntity.create({
+      ...createServerDto,
+    })
+      .save()
+      .catch(() => {
+        ServerEntity.find({ name: createServerDto.name });
+      });
   }
 
   async startServer(id: string) {
