@@ -24,7 +24,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Manages multiple minecraftservers that share the same save file
 
 ## Installation
 
@@ -32,7 +32,17 @@
 $ npm install
 ```
 
+
+## Configuration
+
+### .env
+
+DATABASE_NAME: The database filename
+SECRET: App secret
+
 ## Running the app
+
+
 
 ```bash
 # development
