@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 import { Server } from 'socket.io';
 import { ServerService } from './server/server.service';
 
-@WebSocketGateway()
+@WebSocketGateway(3018)
 export class AppGateway implements OnModuleInit, OnModuleDestroy {
   @WebSocketServer() wss: Server;
 
