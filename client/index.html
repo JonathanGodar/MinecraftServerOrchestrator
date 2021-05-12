@@ -96,7 +96,7 @@
             el: '#app',
             data: {
                 servers: [],
-                baseUrl: new URL('http://127.0.0.1:3019'),
+                baseUrl: new URL('http://127.0.0.1'),
                 socket: null,
             },
             created: async function () {
@@ -113,15 +113,12 @@
                     console.log(this.servers[0]);
                 })
                 this.socket = io(this.baseUrl);
-                // await this.socket.send('test',  {msg: 'wow'});
-                // console.log('send message!');
 
                 this.socket.on('serverUpdate', (msg) => {
                     console.log(msg);
                     this.servers = [...this.servers.filter(val => val.id !== msg.serverId), addServerStatus(msg.data)];
                 })
 
-                // this.servers = await JSON.parse(response.body);
             },
             methods: {
                 start: function (id) {

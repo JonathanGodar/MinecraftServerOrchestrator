@@ -7,6 +7,7 @@ import { AppController } from './app.controller';
 import { AppGateway } from './app.gateway';
 import { AppService } from './app.service';
 import { ServerModule } from './server/server.module';
+import { SocketIOModule } from './socketio/socket-io.module';
 
 @Module({
   imports: [
@@ -25,8 +26,9 @@ import { ServerModule } from './server/server.module';
         fallthrough: false,
       },
     }),
+    SocketIOModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AppGateway],
+  providers: [AppService /* , AppGateway */],
 })
 export class AppModule {}

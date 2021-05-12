@@ -25,12 +25,10 @@ export class AppGateway implements OnModuleInit, OnModuleDestroy {
       this.wss.emit('serverUpdate', val);
       console.log('sending update!!');
     });
-    // this.serverService.serverStatus
-    // this.wss.emit('wow',)
   }
 
-  //   @SubscribeMessage('message')
-  //   handleMessage(client: Socket, payload: string): WsResponse<string> {
-  //       client.
-  //   }
+  @SubscribeMessage('message')
+  handleMessage(client: Socket, payload: string) /* WsResponse<string> */ {
+    return { testing: 'yes' };
+  }
 }
